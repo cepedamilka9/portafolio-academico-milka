@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portafolio Académico</title>
+<style>
+:root{
+  --pink:#e83e8c;
+  --pink-dark:#be185d;
+  --pink-soft:#fff0f6;
+  --pink-pale:#fff7fa;
+  --rose:#f9a8d4;
+  --text:#3b2430;
+  --muted:#806b75;
+  --line:#f3d5e3;
+  --bg:#fff9fb;
+  --white:#fff;
+  --shadow:0 12px 35px rgba(190,24,93,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+button,input{font:inherit}
+.hero{
+  min-height:350px;padding:65px 24px 90px;color:white;
+  background:
+    radial-gradient(circle at 85% 18%,rgba(255,255,255,.30),transparent 25%),
+    radial-gradient(circle at 15% 90%,rgba(255,255,255,.16),transparent 22%),
+    linear-gradient(135deg,#9d174d,#db2777 52%,#f472b6);
+}
+.hero-inner{max-width:1120px;margin:auto}
+.badge{
+  display:inline-block;padding:8px 14px;border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.14);border-radius:999px;
+  font-size:.76rem;font-weight:900;letter-spacing:1.3px
+}
+h1{font-size:clamp(2.4rem,5vw,4.2rem);margin:18px 0 12px;line-height:1.03}
+.hero p{max-width:760px;margin:0;line-height:1.7;font-size:1.02rem;opacity:.94}
+.container{max-width:1120px;margin:-55px auto 60px;padding:0 20px}
+#home{display:block}
+.units-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.unit-card{
+  background:var(--white);border:1px solid var(--line);border-radius:22px;padding:25px;
+  box-shadow:var(--shadow);cursor:pointer;transition:.22s;position:relative;overflow:hidden
+}
+.unit-card:before{
+  content:"";position:absolute;left:0;top:0;width:100%;height:4px;
+  background:linear-gradient(90deg,var(--pink-dark),var(--pink),var(--rose))
+}
+.unit-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(190,24,93,.15)}
+.unit-number{
+  width:50px;height:50px;display:grid;place-items:center;border-radius:15px;
+  background:var(--pink-soft);color:var(--pink-dark);font-weight:900;margin-bottom:21px
+}
+.unit-card h2{margin:0 0 8px;font-size:1.35rem}
+.unit-card p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.5}
+.arrow{position:absolute;right:22px;bottom:20px;color:var(--pink);font-size:1.3rem}
+.view{display:none;margin-top:35px}
+.view.active{display:block}
+.back{
+  border:0;background:transparent;color:var(--pink-dark);font-weight:900;
+  cursor:pointer;padding:8px 0;margin-bottom:15px
+}
+.unit-title{
+  background:var(--white);border:1px solid var(--line);border-radius:22px;
+  padding:27px;box-shadow:var(--shadow);margin-bottom:18px
+}
+.unit-title small{color:var(--pink-dark);font-weight:900;letter-spacing:1.2px}
+.unit-title h2{font-size:2rem;margin:8px 0}
+.unit-title p{margin:0;color:var(--muted);line-height:1.6}
+.subsection{
+  background:linear-gradient(135deg,#fff,#fff5f9);
+  border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:20px
+}
+.subsection-title{
+  display:flex;align-items:center;gap:12px;margin-bottom:15px
+}
+.subsection-number{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  background:var(--pink-soft);color:var(--pink-dark);font-weight:900
+}
+.subsection h3{margin:0;font-size:1.2rem}
+.subsection-desc{margin:3px 0 0;color:var(--muted);font-size:.88rem}
+.topics{display:flex;flex-direction:column;gap:12px}
+.topic{
+  background:white;border:1px solid var(--line);border-radius:17px;overflow:hidden;
+  box-shadow:0 5px 18px rgba(190,24,93,.045)
+}
+.topic-header{
+  width:100%;border:0;background:white;padding:20px 22px;text-align:left;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:15px
+}
+.topic-header:hover{background:var(--pink-pale)}
+.topic-kicker{font-size:.69rem;color:var(--pink-dark);font-weight:900;letter-spacing:1px;text-transform:uppercase}
+.topic-header h4{margin:5px 0 0;font-size:1.08rem}
+.chevron{font-size:1.2rem;color:var(--muted);transition:.2s}
+.topic.open .chevron{transform:rotate(180deg)}
+.topic-body{display:none;padding:0 22px 25px;border-top:1px solid var(--line)}
+.topic.open .topic-body{display:block}
+.section-title{font-size:.9rem;font-weight:900;margin:22px 0 9px;color:var(--pink-dark)}
+.info{
+  background:var(--pink-pale);border-left:4px solid var(--rose);border-radius:12px;
+  padding:16px;color:#5f4651;line-height:1.72
+}
+.info p{margin:0 0 9px}.info p:last-child{margin-bottom:0}
+.video{
+  border-radius:15px;overflow:hidden;background:#25151e;aspect-ratio:16/9;
+  max-width:820px;margin-top:10px
+}
+.video iframe{width:100%;height:100%;border:0}
+.video-placeholder{
+  height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;
+  color:#e8cbd8;text-align:center;padding:20px
+}
+.video-placeholder .play{font-size:2.6rem;margin-bottom:8px}
+.video-placeholder strong{color:white;font-size:1.08rem;margin-bottom:6px}
+.video-link{display:flex;gap:8px;margin-top:10px;max-width:820px}
+.video-link input{
+  flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+  outline:none;background:white
+}
+.video-link input:focus{border-color:var(--rose);box-shadow:0 0 0 3px var(--pink-soft)}
+.video-link button,.file-label{
+  border:0;border-radius:10px;padding:11px 16px;background:var(--pink);
+  color:white;font-weight:900;cursor:pointer;white-space:nowrap
+}
+.video-link button:hover,.file-label:hover{background:var(--pink-dark)}
+.video-search{
+  display:inline-block;margin-top:9px;color:var(--pink-dark);font-size:.82rem;font-weight:800;
+  text-decoration:none
+}
+.evidence{
+  border:2px dashed #f3a7c8;background:#fffafd;border-radius:16px;padding:19px;
+  max-width:820px
+}
+.evidence-row{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.evidence strong{display:block}.evidence span{color:var(--muted);font-size:.82rem}
+input[type=file]{display:none}
+.preview{display:none;margin-top:15px;background:white;border-radius:13px;padding:10px;border:1px solid var(--line)}
+.preview.show{display:block}
+.preview img{display:block;max-width:100%;max-height:500px;margin:auto;border-radius:9px}
+.preview-info{text-align:center;color:var(--muted);font-size:.8rem;margin-top:7px}
+.delete{
+  display:block;margin:9px auto 0;border:0;background:#ffe4ed;color:#be123c;
+  padding:8px 12px;border-radius:8px;font-weight:900;cursor:pointer
+}
+.placeholder{
+  text-align:center;color:var(--muted);padding:35px;background:white;border:1px dashed var(--line);
+  border-radius:17px
+}
+footer{text-align:center;color:var(--muted);padding:0 20px 40px;font-size:.82rem}
+@media(max-width:850px){.units-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:540px){
+  .units-grid{grid-template-columns:1fr}
+  .hero{padding-top:48px}
+  .container{margin-top:-35px}
+  .topic-body{padding-left:16px;padding-right:16px}
+  .video-link{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="badge">PORTAFOLIO ACADÉMICO</span>
+    <h1>Mis Unidades Curriculares</h1>
+    <p>
+      Selecciona una unidad, entra a su eje temático y abre cada contenido.
+      Encontrarás información, datos importantes, un video de apoyo y un espacio
+      para subir la fotografía de tu evidencia del cuaderno.
+    </p>
+  </div>
+</header>
+
+<main class="container">
+<section id="home">
+  <div class="units-grid">
+    <article class="unit-card" onclick="openUnit('u1')">
+      <div class="unit-number">01</div><h2>Unidad 1</h2>
+      <p>Comunicación, expresión, lenguaje, roles, morfosintaxis, puntuación, redacción y ensayo.</p><span class="arrow">→</span>
+    </article>
+    <article class="unit-card" onclick="openUnit('u2')">
+      <div class="unit-number">02</div><h2>Unidad 2</h2>
+      <p>Comunicación no verbal, comunicación artefactual y paralingüística.</p><span class="arrow">→</span>
+    </article>
+    <article class="unit-card" onclick="openUnit('u3')">
+      <div class="unit-number">03</div><h2>Unidad 3</h2>
+      <p>Búsqueda de información, técnicas de búsqueda y bases de datos académicas.</p><span class="arrow">→</span>
+    </article>
+    <article class="unit-card" onclick="openUnit('u4')">
+      <div class="unit-number">04</div><h2>Unidad 4</h2>
+      <p>Procesadores de texto, presentaciones, trabajo colaborativo e inteligencia artificial.</p><span class="arrow">→</span>
+    </article>
+  </div>
+</section>
+
+<section id="u1" class="view">
+<button class="back" onclick="goHome()">← Volver a unidades</button>
+<div class="unit-title">
+  <small>UNIDAD 1</small>
+  <h2>Comunicación, expresión, lenguaje, roles. Morfosintaxis, puntuación</h2>
+  <p>La unidad está dividida en dos bloques temáticos. Abre cada contenido para estudiar y subir su evidencia.</p>
+</div>
+
+<div class="subsection">
+  <div class="subsection-title">
+    <div class="subsection-number">1</div>
+    <div><h3>Comunicación, expresión, lenguaje, roles. Morfosintaxis, puntuación</h3><p class="subsection-desc">Primer bloque de contenidos.</p></div>
+  </div>
+  <div class="topics">
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 1</div><h4>Comunicación</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+        <div class="info">
+          <p><b>¿Qué es?</b> La comunicación es el proceso mediante el cual una persona o grupo transmite y recibe información, ideas, sentimientos o mensajes.</p>
+          <p><b>Elementos importantes:</b> emisor, receptor, mensaje, canal, código, contexto y retroalimentación.</p>
+          <p><b>Datos importantes:</b> una comunicación efectiva requiere claridad, escucha activa y consideración del contexto. Puede ser oral, escrita y también apoyarse en elementos no verbales.</p>
+        </div>
+        <div class="section-title">🎥 Video de apoyo</div>
+        <div class="video" id="video-u1-comunicacion"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo sobre la comunicación</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+        <div class="video-link"><input id="link-u1-comunicacion" placeholder="https://www.youtube.com/watch?v=..." /><button onclick="setVideo('u1-comunicacion')">Mostrar video</button></div>
+        <a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=comunicacion+elementos+proceso+comunicativo">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-comunicacion">＋ Subir foto</label><input id="file-u1-comunicacion" type="file" accept="image/*" onchange="upload(event,'u1-comunicacion')"></div>
+<div class="preview" id="preview-u1-comunicacion"><img id="img-u1-comunicacion" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-comunicacion"></div><button class="delete" onclick="removePhoto('u1-comunicacion')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 2</div><h4>Expresión</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> La expresión es la manifestación de pensamientos, sentimientos, ideas o emociones. Puede realizarse mediante palabras, escritura, gestos, imágenes, movimientos y otros recursos. Sus características dependen del medio utilizado y de la intención de quien comunica.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div>
+        <div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-expresion"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-expresion" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-expresion')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=expresion+comunicacion+verbal+no+verbal">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-expresion">＋ Subir foto</label><input id="file-u1-expresion" type="file" accept="image/*" onchange="upload(event,'u1-expresion')"></div>
+<div class="preview" id="preview-u1-expresion"><img id="img-u1-expresion" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-expresion"></div><button class="delete" onclick="removePhoto('u1-expresion')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 3</div><h4>Lenguaje</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> El lenguaje es un sistema de signos y reglas que permite a las personas representar, organizar y comunicar ideas. Puede manifestarse de forma oral, escrita y mediante diferentes sistemas de signos. Entre sus características están su capacidad simbólica, social y comunicativa.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div>
+        <div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-lenguaje"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-lenguaje" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-lenguaje')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=lenguaje+concepto+caracteristicas+comunicacion">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-lenguaje">＋ Subir foto</label><input id="file-u1-lenguaje" type="file" accept="image/*" onchange="upload(event,'u1-lenguaje')"></div>
+<div class="preview" id="preview-u1-lenguaje"><img id="img-u1-lenguaje" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-lenguaje"></div><button class="delete" onclick="removePhoto('u1-lenguaje')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 4</div><h4>Funciones del lenguaje</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> Las funciones del lenguaje explican la intención predominante de un mensaje. Las más estudiadas son: referencial (informar), emotiva o expresiva (manifestar sentimientos), apelativa o conativa (influir en el receptor), fática (mantener el contacto), metalingüística (hablar sobre el propio lenguaje) y poética (centrarse en la forma del mensaje).</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div>
+        <div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-funciones"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-funciones" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-funciones')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=funciones+del+lenguaje+referencial+emotiva+apelativa+fatica+metalinguistica+poetica">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-funciones">＋ Subir foto</label><input id="file-u1-funciones" type="file" accept="image/*" onchange="upload(event,'u1-funciones')"></div>
+<div class="preview" id="preview-u1-funciones"><img id="img-u1-funciones" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-funciones"></div><button class="delete" onclick="removePhoto('u1-funciones')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 5</div><h4>Lenguaje verbal</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> Es la comunicación que utiliza palabras como principal código. Puede ser oral o escrita. Se caracteriza por permitir la construcción precisa de mensajes mediante vocabulario, reglas gramaticales y organización de las ideas. La claridad depende también del contexto y de la intención comunicativa.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div>
+        <div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-verbal"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-verbal" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-verbal')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=lenguaje+verbal+oral+escrito+caracteristicas">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-verbal">＋ Subir foto</label><input id="file-u1-verbal" type="file" accept="image/*" onchange="upload(event,'u1-verbal')"></div>
+<div class="preview" id="preview-u1-verbal"><img id="img-u1-verbal" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-verbal"></div><button class="delete" onclick="removePhoto('u1-verbal')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 6</div><h4>Roles del lenguaje</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> El lenguaje cumple diferentes roles dentro de la comunicación: permite informar, expresar emociones, establecer relaciones, influir sobre otras personas, construir conocimiento y crear mensajes con una intención determinada. El rol cambia según el contexto, el propósito y los participantes.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div>
+        <div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-roles"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-roles" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-roles')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=roles+del+lenguaje+comunicacion+funciones">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-roles">＋ Subir foto</label><input id="file-u1-roles" type="file" accept="image/*" onchange="upload(event,'u1-roles')"></div>
+<div class="preview" id="preview-u1-roles"><img id="img-u1-roles" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-roles"></div><button class="delete" onclick="removePhoto('u1-roles')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 7</div><h4>Morfosintaxis</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> La morfosintaxis estudia la relación entre la forma de las palabras y la manera en que se organizan dentro de una oración. Analiza categorías gramaticales, concordancia y estructura sintáctica. Es fundamental para construir oraciones claras y correctas.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div>
+        <div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-morfosintaxis"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-morfosintaxis" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-morfosintaxis')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=morfosintaxis+concepto+gramatica+oracion">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-morfosintaxis">＋ Subir foto</label><input id="file-u1-morfosintaxis" type="file" accept="image/*" onchange="upload(event,'u1-morfosintaxis')"></div>
+<div class="preview" id="preview-u1-morfosintaxis"><img id="img-u1-morfosintaxis" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-morfosintaxis"></div><button class="delete" onclick="removePhoto('u1-morfosintaxis')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 8</div><h4>Puntuación</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> Los signos de puntuación organizan las ideas y ayudan a interpretar correctamente un texto. Entre los más utilizados están el punto, la coma, el punto y coma, los dos puntos, los signos de interrogación y exclamación, las comillas y los paréntesis. Su uso correcto favorece la claridad y evita ambigüedades.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div>
+        <div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-puntuacion"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-puntuacion" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-puntuacion')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=signos+de+puntuacion+reglas+ejemplos">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-puntuacion">＋ Subir foto</label><input id="file-u1-puntuacion" type="file" accept="image/*" onchange="upload(event,'u1-puntuacion')"></div>
+<div class="preview" id="preview-u1-puntuacion"><img id="img-u1-puntuacion" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-puntuacion"></div><button class="delete" onclick="removePhoto('u1-puntuacion')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+  </div>
+</div>
+
+<div class="subsection">
+  <div class="subsection-title">
+    <div class="subsection-number">2</div>
+    <div><h3>Redacción y ensayo</h3><p class="subsection-desc">Segundo bloque de contenidos.</p></div>
+  </div>
+  <div class="topics">
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 1</div><h4>El resumen</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> El resumen es un texto breve que presenta las ideas principales de un contenido original sin alterar su sentido. Debe ser claro, objetivo y conciso. Para elaborarlo se identifican las ideas principales, se eliminan detalles secundarios y se redacta con coherencia.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-resumen"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-resumen" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-resumen')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=como+hacer+un+resumen+caracteristicas">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-resumen">＋ Subir foto</label><input id="file-u1-resumen" type="file" accept="image/*" onchange="upload(event,'u1-resumen')"></div>
+<div class="preview" id="preview-u1-resumen"><img id="img-u1-resumen" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-resumen"></div><button class="delete" onclick="removePhoto('u1-resumen')">Eliminar evidencia</button></div></div></div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 2</div><h4>La síntesis</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> La síntesis reúne y reorganiza las ideas fundamentales de una o varias fuentes para presentar una comprensión global. Requiere seleccionar información relevante, relacionarla y expresarla con palabras propias.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-sintesis"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-sintesis" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-sintesis')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=sintesis+concepto+caracteristicas+como+hacer">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-sintesis">＋ Subir foto</label><input id="file-u1-sintesis" type="file" accept="image/*" onchange="upload(event,'u1-sintesis')"></div>
+<div class="preview" id="preview-u1-sintesis"><img id="img-u1-sintesis" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-sintesis"></div><button class="delete" onclick="removePhoto('u1-sintesis')">Eliminar evidencia</button></div></div></div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 3</div><h4>La paráfrasis</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> La paráfrasis consiste en explicar un texto o una idea utilizando palabras propias y conservando su significado esencial. Puede ayudar a demostrar comprensión y facilitar la explicación de conceptos complejos.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-parafrasis"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-parafrasis" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-parafrasis')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=parafrasis+concepto+ejemplos">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-parafrasis">＋ Subir foto</label><input id="file-u1-parafrasis" type="file" accept="image/*" onchange="upload(event,'u1-parafrasis')"></div>
+<div class="preview" id="preview-u1-parafrasis"><img id="img-u1-parafrasis" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-parafrasis"></div><button class="delete" onclick="removePhoto('u1-parafrasis')">Eliminar evidencia</button></div></div></div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 4</div><h4>El argumento</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> Un argumento es un conjunto de razones que busca sustentar una afirmación o postura. Sus elementos suelen incluir una tesis o idea principal y razones o evidencias que la apoyan. Debe ser pertinente, claro y coherente.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-argumento"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-argumento" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-argumento')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=argumentacion+argumento+tesis+razones+ejemplos">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-argumento">＋ Subir foto</label><input id="file-u1-argumento" type="file" accept="image/*" onchange="upload(event,'u1-argumento')"></div>
+<div class="preview" id="preview-u1-argumento"><img id="img-u1-argumento" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-argumento"></div><button class="delete" onclick="removePhoto('u1-argumento')">Eliminar evidencia</button></div></div></div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 5</div><h4>La descripción</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> La descripción representa las características de una persona, objeto, lugar, situación o proceso. Puede centrarse en aspectos físicos, psicológicos o funcionales y utiliza recursos lingüísticos que permiten al lector imaginar o comprender lo descrito.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-descripcion"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-descripcion" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-descripcion')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=texto+descriptivo+caracteristicas+ejemplos">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-descripcion">＋ Subir foto</label><input id="file-u1-descripcion" type="file" accept="image/*" onchange="upload(event,'u1-descripcion')"></div>
+<div class="preview" id="preview-u1-descripcion"><img id="img-u1-descripcion" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-descripcion"></div><button class="delete" onclick="removePhoto('u1-descripcion')">Eliminar evidencia</button></div></div></div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 6</div><h4>El ensayo: estructura y características</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> El ensayo es un texto en prosa en el que se desarrolla una idea, interpretación o postura sobre un tema. Su estructura básica suele incluir introducción, desarrollo y conclusión. Se caracteriza por presentar una tesis o enfoque, argumentos, coherencia, organización y una redacción clara.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u1-ensayo"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u1-ensayo" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u1-ensayo')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=ensayo+estructura+introduccion+desarrollo+conclusion+caracteristicas">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u1-ensayo">＋ Subir foto</label><input id="file-u1-ensayo" type="file" accept="image/*" onchange="upload(event,'u1-ensayo')"></div>
+<div class="preview" id="preview-u1-ensayo"><img id="img-u1-ensayo" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u1-ensayo"></div><button class="delete" onclick="removePhoto('u1-ensayo')">Eliminar evidencia</button></div></div></div>
+    </article>
+
+  </div>
+</div>
+</section>
+
+<section id="u2" class="view">
+<button class="back" onclick="goHome()">← Volver a unidades</button>
+<div class="unit-title"><small>UNIDAD 2</small><h2>Habilidades de la comunicación no verbal. Comunicación artefactual</h2><p>Abre cada tema para estudiar y subir la evidencia correspondiente.</p></div>
+<div class="subsection">
+<div class="subsection-title"><div class="subsection-number">1</div><div><h3>Habilidades de la comunicación no verbal</h3><p class="subsection-desc">Primer bloque.</p></div></div>
+<div class="topics">
+  <article class="topic"><button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 1</div><h4>El contacto visual</h4></div><span class="chevron">⌄</span></button><div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> El contacto visual es un elemento de la comunicación no verbal que puede transmitir atención, interés, seguridad y disposición para interactuar. Su significado depende del contexto cultural y de la situación comunicativa.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u2-contacto"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u2-contacto" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u2-contacto')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=contacto+visual+comunicacion+no+verbal">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u2-contacto">＋ Subir foto</label><input id="file-u2-contacto" type="file" accept="image/*" onchange="upload(event,'u2-contacto')"></div>
+<div class="preview" id="preview-u2-contacto"><img id="img-u2-contacto" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u2-contacto"></div><button class="delete" onclick="removePhoto('u2-contacto')">Eliminar evidencia</button></div></div></div></article>
+  <article class="topic"><button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 2</div><h4>Posturas y movimientos</h4></div><span class="chevron">⌄</span></button><div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> Las posturas y movimientos corporales acompañan la comunicación y pueden expresar actitudes, emociones o disposición. Deben interpretarse considerando el contexto y el conjunto de señales, no de forma aislada.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u2-posturas"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u2-posturas" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u2-posturas')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=posturas+movimientos+comunicacion+no+verbal">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u2-posturas">＋ Subir foto</label><input id="file-u2-posturas" type="file" accept="image/*" onchange="upload(event,'u2-posturas')"></div>
+<div class="preview" id="preview-u2-posturas"><img id="img-u2-posturas" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u2-posturas"></div><button class="delete" onclick="removePhoto('u2-posturas')">Eliminar evidencia</button></div></div></div></article>
+  <article class="topic"><button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 3</div><h4>Gestos y expresión facial</h4></div><span class="chevron">⌄</span></button><div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> Los gestos y las expresiones faciales complementan o modifican el significado de un mensaje. Pueden manifestar emociones, reacciones y actitudes durante una interacción.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u2-gestos"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u2-gestos" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u2-gestos')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=gestos+expresion+facial+comunicacion+no+verbal">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u2-gestos">＋ Subir foto</label><input id="file-u2-gestos" type="file" accept="image/*" onchange="upload(event,'u2-gestos')"></div>
+<div class="preview" id="preview-u2-gestos"><img id="img-u2-gestos" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u2-gestos"></div><button class="delete" onclick="removePhoto('u2-gestos')">Eliminar evidencia</button></div></div></div></article>
+</div></div>
+<div class="subsection">
+<div class="subsection-title"><div class="subsection-number">2</div><div><h3>Paralingüística</h3><p class="subsection-desc">Segundo bloque.</p></div></div>
+<div class="topics">
+  <article class="topic"><button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 1</div><h4>Paralingüística</h4></div><span class="chevron">⌄</span></button><div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> La paralingüística estudia elementos vocales que acompañan las palabras y aportan significado al mensaje. Incluye aspectos como tono, volumen, ritmo, velocidad, pausas y entonación.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u2-paralinguistica"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u2-paralinguistica" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u2-paralinguistica')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=paralinguistica+voz+tono+volumen+ritmo">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u2-paralinguistica">＋ Subir foto</label><input id="file-u2-paralinguistica" type="file" accept="image/*" onchange="upload(event,'u2-paralinguistica')"></div>
+<div class="preview" id="preview-u2-paralinguistica"><img id="img-u2-paralinguistica" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u2-paralinguistica"></div><button class="delete" onclick="removePhoto('u2-paralinguistica')">Eliminar evidencia</button></div></div></div></article>
+  <article class="topic"><button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 2</div><h4>Funciones y características de la voz</h4></div><span class="chevron">⌄</span></button><div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> La voz permite transmitir información y también matizar emociones, intenciones y actitudes. Sus características incluyen tono, intensidad o volumen, timbre, ritmo, velocidad, pausas y entonación.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u2-voz"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u2-voz" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u2-voz')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=caracteristicas+de+la+voz+tono+volumen+timbre+ritmo">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u2-voz">＋ Subir foto</label><input id="file-u2-voz" type="file" accept="image/*" onchange="upload(event,'u2-voz')"></div>
+<div class="preview" id="preview-u2-voz"><img id="img-u2-voz" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u2-voz"></div><button class="delete" onclick="removePhoto('u2-voz')">Eliminar evidencia</button></div></div></div></article>
+  <article class="topic"><button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 3</div><h4>Habilidades de la articulación de la voz</h4></div><span class="chevron">⌄</span></button><div class="topic-body"><div class="section-title">📚 Información</div>
+<div class="info">
+<p><b>¿Qué es?</b> La articulación se relaciona con la claridad y precisión con que se producen los sonidos del habla. Una buena articulación favorece la comprensión del mensaje y puede mejorarse mediante ejercicios de dicción, respiración y pronunciación.</p>
+<p><b>Características y datos importantes:</b> Es importante reconocer sus elementos principales, su función y su aplicación práctica para comprender mejor el tema y utilizarlo correctamente.</p>
+</div><div class="section-title">🎥 Video de apoyo</div>
+<div class="video" id="video-u2-articulacion"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+<div class="video-link"><input id="link-u2-articulacion" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u2-articulacion')">Mostrar video</button></div>
+<a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=articulacion+voz+diccion+ejercicios">🔎 Buscar video de apoyo en YouTube</a><div class="section-title">📸 Evidencia de mi cuaderno</div>
+<div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div>
+<label class="file-label" for="file-u2-articulacion">＋ Subir foto</label><input id="file-u2-articulacion" type="file" accept="image/*" onchange="upload(event,'u2-articulacion')"></div>
+<div class="preview" id="preview-u2-articulacion"><img id="img-u2-articulacion" alt="Evidencia del cuaderno"><div class="preview-info" id="name-u2-articulacion"></div><button class="delete" onclick="removePhoto('u2-articulacion')">Eliminar evidencia</button></div></div></div></article>
+</div></div>
+</section>
+
+
+<section id="u3" class="view">
+<button class="back" onclick="goHome()">← Volver a unidades</button>
+<div class="unit-title"><small>UNIDAD 3</small><h2>Búsqueda de información y bases de datos</h2><p>Abre cada tema para consultar información, ver un video de apoyo y subir la evidencia de tu cuaderno.</p></div>
+
+<div class="subsection">
+  <div class="subsection-title"><div class="subsection-number">1</div><div><h3>Etapas del proceso de búsqueda de información. Técnicas de búsqueda de información</h3><p class="subsection-desc">Primer bloque de contenidos.</p></div></div>
+  <div class="topics">
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 1</div><h4>Establecer el nivel y la cobertura de la búsqueda</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+        <div class="info">
+          <p><b>¿Qué es?</b> Consiste en definir qué tan amplia y profunda será una búsqueda de información antes de comenzar a investigar.</p>
+          <p><b>Características y datos importantes:</b> se determina el propósito de la búsqueda, el tema, el periodo de información, el tipo de fuentes y el nivel de profundidad necesario. Esto ayuda a evitar información innecesaria y a enfocar la investigación.</p>
+        </div>
+        <div class="section-title">🎥 Video de apoyo</div>
+        <div class="video" id="video-u3-nivel"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+        <div class="video-link"><input id="link-u3-nivel" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u3-nivel')">Mostrar video</button></div>
+        <a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=como+establecer+una+estrategia+de+busqueda+de+informacion">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+        <div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u3-nivel">＋ Subir foto</label><input id="file-u3-nivel" type="file" accept="image/*" onchange="upload(event,'u3-nivel')"></div><div class="preview" id="preview-u3-nivel"><img id="img-u3-nivel"><div class="preview-info" id="name-u3-nivel"></div><button class="delete" onclick="removePhoto('u3-nivel')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 2</div><h4>Seleccionar las fuentes de información que vamos a utilizar</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+        <div class="info">
+          <p><b>¿Qué es?</b> Es el proceso de elegir fuentes confiables, pertinentes y adecuadas para responder una pregunta o desarrollar una investigación.</p>
+          <p><b>Características y datos importantes:</b> se debe considerar la autoridad del autor o institución, actualidad, relevancia, propósito y calidad de la información. Pueden utilizarse libros, artículos académicos, sitios institucionales y bases de datos especializadas.</p>
+        </div>
+        <div class="section-title">🎥 Video de apoyo</div>
+        <div class="video" id="video-u3-fuentes"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+        <div class="video-link"><input id="link-u3-fuentes" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u3-fuentes')">Mostrar video</button></div>
+        <a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=fuentes+confiables+de+informacion+academica">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+        <div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u3-fuentes">＋ Subir foto</label><input id="file-u3-fuentes" type="file" accept="image/*" onchange="upload(event,'u3-fuentes')"></div><div class="preview" id="preview-u3-fuentes"><img id="img-u3-fuentes"><div class="preview-info" id="name-u3-fuentes"></div><button class="delete" onclick="removePhoto('u3-fuentes')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 3</div><h4>Elaborar la estrategia de búsqueda</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+        <div class="info">
+          <p><b>¿Qué es?</b> Es planificar cómo se realizará la búsqueda para encontrar información pertinente de manera eficiente.</p>
+          <p><b>Características y datos importantes:</b> incluye seleccionar palabras clave, sinónimos, operadores de búsqueda y filtros. Una estrategia organizada permite obtener resultados más precisos y reducir el tiempo de búsqueda.</p>
+        </div>
+        <div class="section-title">🎥 Video de apoyo</div>
+        <div class="video" id="video-u3-estrategia"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div>
+        <div class="video-link"><input id="link-u3-estrategia" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u3-estrategia')">Mostrar video</button></div>
+        <a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=estrategias+de+busqueda+de+informacion+palabras+clave+operadores">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div>
+        <div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u3-estrategia">＋ Subir foto</label><input id="file-u3-estrategia" type="file" accept="image/*" onchange="upload(event,'u3-estrategia')"></div><div class="preview" id="preview-u3-estrategia"><img id="img-u3-estrategia"><div class="preview-info" id="name-u3-estrategia"></div><button class="delete" onclick="removePhoto('u3-estrategia')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+  </div>
+</div>
+
+<div class="subsection">
+  <div class="subsection-title"><div class="subsection-number">2</div><div><h3>Bases de datos</h3><p class="subsection-desc">Segundo bloque de contenidos.</p></div></div>
+  <div class="topics">
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 1</div><h4>Google Académico</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div>
+        <div class="info"><p><b>¿Qué es?</b> Google Académico es un buscador especializado en literatura académica, como artículos, tesis, libros y trabajos de investigación.</p><p><b>Características y datos importantes:</b> permite localizar documentos académicos, revisar citas y explorar trabajos relacionados. Es útil como punto de partida para una investigación.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u3-scholar"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u3-scholar" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u3-scholar')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=como+usar+Google+Academico">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u3-scholar">＋ Subir foto</label><input id="file-u3-scholar" type="file" accept="image/*" onchange="upload(event,'u3-scholar')"></div><div class="preview" id="preview-u3-scholar"><img id="img-u3-scholar"><div class="preview-info" id="name-u3-scholar"></div><button class="delete" onclick="removePhoto('u3-scholar')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 2</div><h4>Latindex</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div><div class="info"><p><b>¿Qué es?</b> Latindex es un sistema de información que reúne y difunde información sobre revistas académicas y científicas de Iberoamérica y otras regiones.</p><p><b>Características y datos importantes:</b> permite identificar revistas y consultar información bibliográfica y editorial. Es útil para localizar publicaciones académicas y valorar opciones de consulta.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u3-latindex"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u3-latindex" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u3-latindex')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=Latindex+como+buscar+revistas+academicas">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u3-latindex">＋ Subir foto</label><input id="file-u3-latindex" type="file" accept="image/*" onchange="upload(event,'u3-latindex')"></div><div class="preview" id="preview-u3-latindex"><img id="img-u3-latindex"><div class="preview-info" id="name-u3-latindex"></div><button class="delete" onclick="removePhoto('u3-latindex')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 3</div><h4>Scielo</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div><div class="info"><p><b>¿Qué es?</b> SciELO es una biblioteca electrónica que proporciona acceso a colecciones de revistas científicas y académicas.</p><p><b>Características y datos importantes:</b> permite consultar artículos científicos y realizar búsquedas por áreas y publicaciones. Es una herramienta útil para encontrar literatura académica.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u3-scielo"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u3-scielo" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u3-scielo')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=como+buscar+articulos+en+SciELO">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u3-scielo">＋ Subir foto</label><input id="file-u3-scielo" type="file" accept="image/*" onchange="upload(event,'u3-scielo')"></div><div class="preview" id="preview-u3-scielo"><img id="img-u3-scielo"><div class="preview-info" id="name-u3-scielo"></div><button class="delete" onclick="removePhoto('u3-scielo')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 4</div><h4>Scopus</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div><div class="info"><p><b>¿Qué es?</b> Scopus es una base de datos bibliográfica y de citas utilizada para consultar literatura científica y académica.</p><p><b>Características y datos importantes:</b> permite buscar publicaciones, autores, fuentes y citas. Es especialmente útil para investigaciones académicas que requieren literatura científica especializada.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u3-scopus"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u3-scopus" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u3-scopus')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=Scopus+como+buscar+articulos+academicos">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u3-scopus">＋ Subir foto</label><input id="file-u3-scopus" type="file" accept="image/*" onchange="upload(event,'u3-scopus')"></div><div class="preview" id="preview-u3-scopus"><img id="img-u3-scopus"><div class="preview-info" id="name-u3-scopus"></div><button class="delete" onclick="removePhoto('u3-scopus')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+  </div>
+</div>
+</section>
+
+
+<section id="u4" class="view">
+<button class="back" onclick="goHome()">← Volver a unidades</button>
+<div class="unit-title"><small>UNIDAD 4</small><h2>Procesador de textos, hoja de cálculo, software, aplicaciones y herramientas de IA</h2><p>Abre cada tema para consultar información, ver un video de apoyo y subir la evidencia de tu cuaderno.</p></div>
+
+<div class="subsection">
+  <div class="subsection-title"><div class="subsection-number">1</div><div><h3>Procesador de textos. Hoja de cálculo</h3><p class="subsection-desc">Primer bloque de contenidos.</p></div></div>
+  <div class="topics">
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 1</div><h4>Generalidades y aplicaciones de los procesadores de texto en el ámbito profesional</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div><div class="info"><p><b>¿Qué es?</b> Un procesador de texto es una aplicación informática para crear, editar, dar formato, organizar y compartir documentos.</p><p><b>Características y datos importantes:</b> permite trabajar con texto, tablas, imágenes, estilos, encabezados, referencias y herramientas de revisión. En el ámbito profesional se utiliza para informes, cartas, trabajos académicos, propuestas y documentos administrativos.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u4-procesador"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u4-procesador" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u4-procesador')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=procesadores+de+texto+uso+profesional">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u4-procesador">＋ Subir foto</label><input id="file-u4-procesador" type="file" accept="image/*" onchange="upload(event,'u4-procesador')"></div><div class="preview" id="preview-u4-procesador"><img id="img-u4-procesador"><div class="preview-info" id="name-u4-procesador"></div><button class="delete" onclick="removePhoto('u4-procesador')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+  </div>
+</div>
+
+<div class="subsection">
+  <div class="subsection-title"><div class="subsection-number">2</div><div><h3>Software y aplicaciones. Herramientas de IA generativa para la elaboración de documentos, hojas de cálculo, informes y presentaciones académicas</h3><p class="subsection-desc">Segundo bloque de contenidos.</p></div></div>
+  <div class="topics">
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 1</div><h4>Usos de las presentaciones para la transmisión de la información</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div><div class="info"><p><b>¿Qué es?</b> Una presentación digital organiza información mediante diapositivas para comunicar ideas de manera visual y estructurada.</p><p><b>Características y datos importantes:</b> debe tener un objetivo claro, información organizada, diseño legible y recursos visuales que apoyen el mensaje. Puede utilizarse para exposiciones, informes, proyectos y reuniones profesionales.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u4-presentaciones"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u4-presentaciones" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u4-presentaciones')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=presentaciones+digitales+comunicacion+informacion">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u4-presentaciones">＋ Subir foto</label><input id="file-u4-presentaciones" type="file" accept="image/*" onchange="upload(event,'u4-presentaciones')"></div><div class="preview" id="preview-u4-presentaciones"><img id="img-u4-presentaciones"><div class="preview-info" id="name-u4-presentaciones"></div><button class="delete" onclick="removePhoto('u4-presentaciones')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 2</div><h4>Aplicación de presentaciones utilizando PowerPoint, Prezi y Canva</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div><div class="info"><p><b>¿Qué es?</b> PowerPoint, Prezi y Canva son herramientas que permiten crear presentaciones visuales para comunicar información.</p><p><b>Características y datos importantes:</b> PowerPoint destaca por sus herramientas de diapositivas y edición; Prezi utiliza una estructura visual dinámica; Canva facilita la creación de diseños mediante plantillas y recursos gráficos. La elección depende del objetivo y del público.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u4-herramientas"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u4-herramientas" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u4-herramientas')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=PowerPoint+Prezi+Canva+presentaciones">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u4-herramientas">＋ Subir foto</label><input id="file-u4-herramientas" type="file" accept="image/*" onchange="upload(event,'u4-herramientas')"></div><div class="preview" id="preview-u4-herramientas"><img id="img-u4-herramientas"><div class="preview-info" id="name-u4-herramientas"></div><button class="delete" onclick="removePhoto('u4-herramientas')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 3</div><h4>Aplicación de presentaciones con trabajo colaborativo</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div><div class="info"><p><b>¿Qué es?</b> El trabajo colaborativo permite que varias personas participen en la creación, edición, revisión y organización de una presentación.</p><p><b>Características y datos importantes:</b> facilita la distribución de tareas, los comentarios, la revisión conjunta y el seguimiento de cambios. Es útil para proyectos académicos y profesionales.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u4-colaborativo"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u4-colaborativo" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u4-colaborativo')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=trabajo+colaborativo+presentaciones+Canva+PowerPoint">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u4-colaborativo">＋ Subir foto</label><input id="file-u4-colaborativo" type="file" accept="image/*" onchange="upload(event,'u4-colaborativo')"></div><div class="preview" id="preview-u4-colaborativo"><img id="img-u4-colaborativo"><div class="preview-info" id="name-u4-colaborativo"></div><button class="delete" onclick="removePhoto('u4-colaborativo')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <button class="topic-header" onclick="toggleTopic(this)"><div><div class="topic-kicker">Contenido 4</div><h4>Utilización de Microsoft Copilot, Gemini e IA</h4></div><span class="chevron">⌄</span></button>
+      <div class="topic-body">
+        <div class="section-title">📚 Información</div><div class="info"><p><b>¿Qué es?</b> Las herramientas de inteligencia artificial generativa pueden ayudar a crear, transformar, resumir y organizar información y contenidos digitales.</p><p><b>Características y datos importantes:</b> Microsoft Copilot y Gemini pueden apoyar tareas de redacción, análisis, organización de información y generación de ideas. La información generada debe revisarse, verificarse y utilizarse de manera responsable, especialmente en trabajos académicos.</p></div>
+        <div class="section-title">🎥 Video de apoyo</div><div class="video" id="video-u4-ia"><div class="video-placeholder"><div class="play">▶</div><strong>Video de apoyo</strong><span>Pega un enlace de YouTube debajo para mostrarlo aquí.</span></div></div><div class="video-link"><input id="link-u4-ia" placeholder="https://www.youtube.com/watch?v=..."><button onclick="setVideo('u4-ia')">Mostrar video</button></div><a class="video-search" target="_blank" href="https://www.youtube.com/results?search_query=IA+generativa+Copilot+Gemini+uso+academico">🔎 Buscar video de apoyo en YouTube</a>
+        <div class="section-title">📸 Evidencia de mi cuaderno</div><div class="evidence"><div class="evidence-row"><div><strong>Sube la fotografía de tu evidencia</strong><span>JPG, PNG, WEBP o GIF</span></div><label class="file-label" for="file-u4-ia">＋ Subir foto</label><input id="file-u4-ia" type="file" accept="image/*" onchange="upload(event,'u4-ia')"></div><div class="preview" id="preview-u4-ia"><img id="img-u4-ia"><div class="preview-info" id="name-u4-ia"></div><button class="delete" onclick="removePhoto('u4-ia')">Eliminar evidencia</button></div></div>
+      </div>
+    </article>
+  </div>
+</div>
+</section>
+
+</main>
+
+<footer>Portafolio académico · Evidencias guardadas en este navegador.</footer>
+
+<script>
+const DB="portafolioAcademicoRosa", STORE="evidencias";
+function dbOpen(){return new Promise((res,rej)=>{let r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(STORE);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function put(id,file){let db=await dbOpen();return new Promise((res,rej)=>{let t=db.transaction(STORE,"readwrite");t.objectStore(STORE).put({blob:file,name:file.name},id);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+async function get(id){let db=await dbOpen();return new Promise((res,rej)=>{let r=db.transaction(STORE).objectStore(STORE).get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function del(id){let db=await dbOpen();return new Promise((res,rej)=>{let t=db.transaction(STORE,"readwrite");t.objectStore(STORE).delete(id);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+function openUnit(id){document.getElementById("home").style.display="none";document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
+function goHome(){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById("home").style.display="block";window.scrollTo({top:0,behavior:"smooth"})}
+function toggleTopic(btn){btn.parentElement.classList.toggle("open")}
+function youtubeId(url){try{let u=new URL(url);if(u.hostname.includes("youtu.be"))return u.pathname.slice(1);if(u.hostname.includes("youtube.com"))return u.searchParams.get("v")||(u.pathname.includes("/embed/")?u.pathname.split("/embed/")[1]:"")}catch(e){}return null}
+function setVideo(id){let url=document.getElementById("link-"+id).value.trim();let vid=youtubeId(url);if(!vid){alert("Coloca un enlace válido de YouTube.");return}document.getElementById("video-"+id).innerHTML='<iframe src="https://www.youtube.com/embed/'+vid+'" title="Video de apoyo" allowfullscreen></iframe>';localStorage.setItem("video-"+id,url)}
+async function upload(e,id){let f=e.target.files[0];if(!f)return;if(!f.type.startsWith("image/")){alert("Selecciona una imagen.");return}await put(id,f);show(id,f)}
+function show(id,obj){let url=URL.createObjectURL(obj.blob||obj);document.getElementById("img-"+id).src=url;document.getElementById("name-"+id).textContent="Evidencia: "+(obj.name||"imagen");document.getElementById("preview-"+id).classList.add("show")}
+async function removePhoto(id){await del(id);document.getElementById("preview-"+id).classList.remove("show");document.getElementById("file-"+id).value=""}
+function Info({title,text}){return}
+function Video({id,query}){return}
+function Evidence({id}){return}
+document.addEventListener("DOMContentLoaded",async()=>{
+  // Rehidrata las evidencias guardadas. Los componentes Info/Video/Evidence se sustituyen abajo.
+  document.querySelectorAll('[id^="video-"]').forEach(box=>{
+    let id=box.id.replace("video-","");
+    if(!box.querySelector("iframe")){
+      let url=localStorage.getItem("video-"+id);
+      if(url){let input=document.getElementById("link-"+id);if(input)input.value=url;let vid=youtubeId(url);if(vid)box.innerHTML='<iframe src="https://www.youtube.com/embed/'+vid+'" title="Video de apoyo" allowfullscreen></iframe>'}
+    }
+  });
+  const ids=[...document.querySelectorAll('[id^="preview-"]')].map(x=>x.id.replace("preview-",""));
+  for(const id of ids){let x=await get(id);if(x)show(id,x)}
+});
+</script>
+
+</body>
+</html>
